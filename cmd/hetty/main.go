@@ -1,35 +1,69 @@
 package main
 
 import (
-	"context"
-	"errors"
 	"flag"
-	llog "log"
+	"fmt"
+	"log"
 	"os"
-
-	"go.uber.org/zap"
-
-	"github.com/dstotijn/hetty/pkg/log"
 )
 
+const (
+	// defaultAddr is the default address the HTTP proxy and admin interface listen on.
+	defaultAddr = ":8080"
+	// defaultAdminPath is the default path prefix for the admin interface.
+	defaultAdminPath = "/hetty/"
+)
+
+// version is set at build time via ldflags.
+var version = "dev"
+
 func main() {
-	hettyCmd, cfg := NewHettyCommand()
+	// Parse command-line flags.
+	addr := flag.String("addr", defaultAddr, "TCP address to listen on (e.g. \"127.0.0.1:8080\")")
+	adminPath := flag.String("adminPath", defaultAdminPath, "Path prefix for admin interface")
+	certsDir := flag.String("certsDir", "", "Directory for storing CA certificate and key (defaults to system config dir)")
+	dbPath := flag.String("db", "", "Path to database file (defaults to system data dir)")
+	upstreamProxy := flag.String("upstreamProxy", "", "Optional upstream proxy URL (e.g. http://proxy:8080)")
+	printVersion := flag.Bool("version", false, "Print version and exit")
 
-	if err := hettyCmd.Parse(os.Args[1:]); err != nil {
-		llog.Fatalf("Failed to parse command line arguments: %v", err)
+	flag.Parse()
+
+	if *printVersion {
+		fmt.Printf("hetty %v\n", version)
+		os.Exit(0)
 	}
 
-	logger, err := log.NewZapLogger(cfg.verbose, cfg.jsonLogs)
-	if err != nil {
-		llog.Fatal(err)
-	}
-	//nolint:errcheck
-	defer logger.Sync()
+	log.Printf("[INFO] Starting hetty %v", version)
 
-	cfg.logger = logger
-
-	err = hettyCmd.Run(context.Background())
-	if err != nil && !errors.Is(err, flag.ErrHelp) {
-		logger.Fatal("Command failed.", zap.Error(err))
+	// Resolve default certs directory if not provided.
+	if *certsDir == "" {
+		configDir, err := os.UserConfigDir()
+		if err != nil {
+			log.Fatalf("[FATAL] Could not determine user config directory: %v", err)
+		}
+		*certsDir = configDir + "/hetty/certs"
 	}
+
+	// Resolve default database path if not provided.
+	if *dbPath == "" {
+		dataDir, err := os.UserCacheDir()
+		if err != nil {
+			log.Fatalf("[FATAL] Could not determine user cache directory: %v", err)
+		}
+		*dbPath = dataDir + "/hetty/db"
+	}
+
+	log.Printf("[INFO] Using certs directory: %v", *certsDir)
+	log.Printf("[INFO] Using database path: %v", *dbPath)
+
+	if *upstreamProxy != "" {
+		log.Printf("[INFO] Using upstream proxy: %v", *upstreamProxy)
+	}
+
+	log.Printf("[INFO] Listening on %v", *addr)
+	log.Printf("[INFO] Admin interface available at http://%v%v", *addr, *adminPath)
+
+	// TODO: Initialize proxy, database, and HTTP server.
+	// This will be wired up as the project progresses.
+	_ = adminPath
 }
