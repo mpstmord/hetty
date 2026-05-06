@@ -13,6 +13,10 @@ const (
 	defaultAddr = "127.0.0.1:8080"
 	// defaultAdminPath is the default path prefix for the admin interface.
 	defaultAdminPath = "/hetty/"
+	// defaultCertsSubdir is the subdirectory under the user config dir for certs.
+	defaultCertsSubdir = "/hetty/certs"
+	// defaultDBSubdir is the subdirectory under the user cache dir for the database.
+	defaultDBSubdir = "/hetty/db"
 )
 
 // version is set at build time via ldflags.
@@ -42,7 +46,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("[FATAL] Could not determine user config directory: %v", err)
 		}
-		*certsDir = configDir + "/hetty/certs"
+		*certsDir = configDir + defaultCertsSubdir
 	}
 
 	// Resolve default database path if not provided.
@@ -51,7 +55,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("[FATAL] Could not determine user cache directory: %v", err)
 		}
-		*dbPath = dataDir + "/hetty/db"
+		*dbPath = dataDir + defaultDBSubdir
 	}
 
 	log.Printf("[INFO] Using certs directory: %v", *certsDir)
