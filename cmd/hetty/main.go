@@ -9,7 +9,8 @@ import (
 
 const (
 	// defaultAddr is the default address the HTTP proxy and admin interface listen on.
-	defaultAddr = ":8080"
+	// Changed from :8080 to 127.0.0.1:8080 to avoid binding on all interfaces by default.
+	defaultAddr = "127.0.0.1:8080"
 	// defaultAdminPath is the default path prefix for the admin interface.
 	defaultAdminPath = "/hetty/"
 )
