@@ -68,6 +68,9 @@ func main() {
 	log.Printf("[INFO] Listening on %v", *addr)
 	log.Printf("[INFO] Admin interface available at http://%v%v", *addr, *adminPath)
 
+	// Reminder: open the admin UI in the browser after startup for easier access.
+	// e.g. http://127.0.0.1:8080/hetty/
+
 	// TODO: Initialize proxy, database, and HTTP server.
 	// This will be wired up as the project progresses.
 	_ = adminPath
