@@ -17,7 +17,8 @@ const (
 	// DefaultWriteTimeout is the default timeout for writing the response.
 	DefaultWriteTimeout = 30 * time.Second
 	// DefaultIdleTimeout is the default timeout for idle connections.
-	DefaultIdleTimeout = 120 * time.Second
+	// Increased from 120s to 180s to better handle slower proxy connections.
+	DefaultIdleTimeout = 180 * time.Second
 )
 
 // Server represents the Hetty API HTTP server.
@@ -109,4 +110,4 @@ func registerRoutes(mux *http.ServeMux, logger *zap.Logger) {
 
 // healthHandler returns a simple health check handler.
 func healthHandler(logger *zap.Logger) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request)
+	return func(w http.ResponseWriter, r *http.Request
