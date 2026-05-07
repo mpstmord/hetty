@@ -30,6 +30,8 @@ func main() {
 	dbPath := flag.String("db", "", "Path to database file (defaults to system data dir)")
 	upstreamProxy := flag.String("upstreamProxy", "", "Optional upstream proxy URL (e.g. http://proxy:8080)")
 	printVersion := flag.Bool("version", false, "Print version and exit")
+	// Personal flag: verbose enables more detailed request/response logging.
+	verbose := flag.Bool("verbose", false, "Enable verbose logging")
 
 	flag.Parse()
 
@@ -39,6 +41,10 @@ func main() {
 	}
 
 	log.Printf("[INFO] Starting hetty %v", version)
+
+	if *verbose {
+		log.Printf("[INFO] Verbose logging enabled")
+	}
 
 	// Resolve default certs directory if not provided.
 	if *certsDir == "" {
@@ -79,4 +85,5 @@ func main() {
 	// TODO: Initialize proxy, database, and HTTP server.
 	// This will be wired up as the project progresses.
 	_ = adminPath
+	_ = verbose
 }
