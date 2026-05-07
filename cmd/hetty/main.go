@@ -63,6 +63,10 @@ func main() {
 
 	if *upstreamProxy != "" {
 		log.Printf("[INFO] Using upstream proxy: %v", *upstreamProxy)
+	} else {
+		// Personal note: when doing Burp Suite chaining, pass something like:
+		//   -upstreamProxy http://127.0.0.1:8081
+		log.Printf("[INFO] No upstream proxy configured (use -upstreamProxy to chain e.g. through Burp Suite)")
 	}
 
 	log.Printf("[INFO] Listening on %v", *addr)
