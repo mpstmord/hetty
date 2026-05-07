@@ -13,11 +13,11 @@ import (
 
 const (
 	// DefaultReadTimeout is the default timeout for reading the entire request.
-	DefaultReadTimeout = 15 * time.Second
+	DefaultReadTimeout = 30 * time.Second
 	// DefaultWriteTimeout is the default timeout for writing the response.
-	DefaultWriteTimeout = 15 * time.Second
+	DefaultWriteTimeout = 30 * time.Second
 	// DefaultIdleTimeout is the default timeout for idle connections.
-	DefaultIdleTimeout = 60 * time.Second
+	DefaultIdleTimeout = 120 * time.Second
 )
 
 // Server represents the Hetty API HTTP server.
@@ -109,12 +109,4 @@ func registerRoutes(mux *http.ServeMux, logger *zap.Logger) {
 
 // healthHandler returns a simple health check handler.
 func healthHandler(logger *zap.Logger) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, err := w.Write([]byte(`{"status":"ok"}`))
-		if err != nil {
-			logger.Error("Failed to write health response", zap.Error(err))
-		}
-	}
-}
+	return func(w http.ResponseWriter, r *http.Request)
