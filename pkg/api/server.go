@@ -19,6 +19,9 @@ const (
 	// DefaultIdleTimeout is the default timeout for idle connections.
 	// Increased from 120s to 180s to better handle slower proxy connections.
 	DefaultIdleTimeout = 180 * time.Second
+	// DefaultAddr is the default address the API server listens on.
+	// Changed from :8080 to :9090 to avoid conflicts with other local services.
+	DefaultAddr = ":9090"
 )
 
 // Server represents the Hetty API HTTP server.
@@ -45,7 +48,7 @@ type Config struct {
 // NewServer creates a new API server with the given configuration.
 func NewServer(cfg Config) (*Server, error) {
 	if cfg.Addr == "" {
-		cfg.Addr = ":8080"
+		cfg.Addr = DefaultAddr
 	}
 	if cfg.Logger == nil {
 		return nil, fmt.Errorf("api: logger is required")
@@ -109,5 +112,4 @@ func registerRoutes(mux *http.ServeMux, logger *zap.Logger) {
 }
 
 // healthHandler returns a simple health check handler.
-func healthHandler(logger *zap.Logger) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request
+func healthHandler(logger *zap.Log
