@@ -83,8 +83,6 @@ func main() {
 	// Tip: use -upstreamProxy to chain through Burp Suite for extra analysis.
 	//
 	// Reminder: make sure the hetty CA cert is imported into the browser/OS trust
-	// store before intercepting HTTPS traffic, otherwise you'll get TLS errors.
-	// The CA cert lives in the certs directory printed above.
-
-	// TODO: Initialize proxy, database, and HTTP server.
-	// This will be wired up as the project prog
+	// store before intercepting HTTPS traffic. Export it from the admin UI under
+	// Settings > CA Certificate, then import into Firefox/Chrome/OS keychain.
+}
